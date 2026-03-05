@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 7 - Django Views & URLs</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap');
+        body { font-family: 'Kanit', sans-serif; background-color: #f0f4f8; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="../">ICT12367 - Assignments</a>
+        </div>
+    </nav>
+    <div class="container my-4">
+        <h2 class="text-primary text-center mb-2">Assignment 7 - Django Views & URLs</h2>
+        <p class="text-center text-muted mb-4">68043407 วรพัธน์ ด้วงแก้ว</p>
+
+        <!-- Demo Form -->
+        <div class="row justify-content-center mb-5">
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-header bg-success text-white text-center">
+                        <h5 class="mb-0">Demo: บันทึกข้อมูลพนักงาน</h5>
+                    </div>
+                    <div class="card-body">
+                        <form onsubmit="event.preventDefault(); alert('Demo only - ฟอร์มนี้แสดงผลเป็น static HTML');">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Full Name</label>
+                                <input type="text" class="form-control" placeholder="กรุณากรอกชื่อ-นามสกุล">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Email</label>
+                                <input type="email" class="form-control" placeholder="กรุณากรอก Email">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Position</label>
+                                <select class="form-select">
+                                    <option value="manager">Manager</option>
+                                    <option value="developer">Developer</option>
+                                    <option value="designer">Designer</option>
+                                    <option value="tester">Tester</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Phone Number</label>
+                                <input type="tel" class="form-control" placeholder="กรุณากรอกเบอร์โทร">
+                            </div>
+                            <button type="submit" class="btn btn-success w-100">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Source Code -->
+        <h4 class="text-secondary mb-3">Source Code</h4>
+        <div class="card shadow mb-3">
+            <div class="card-header"><strong>views.py</strong></div>
+            <div class="card-body p-0">
+<pre class="mb-0"><code class="language-python">from django.shortcuts import render
+from django.http import HttpResponse
+
+def index(request):
+    return HttpResponse("&lt;h1&gt;หน้าแรกของเว็บไซต์วิชา ICT12367&lt;/h1&gt;")
+
+def about(request):
+    return HttpResponse("&lt;h1&gt;เกี่ยวกับเรา&lt;/h1&gt;")
+
+def form(request):
+    return render(request, 'form.html')
+
+def contact(request):
+    return HttpResponse("&lt;h1&gt;ติดต่อ 68043407 วรพัธน์ ด้วงแก้ว&lt;/h1&gt;")</code></pre>
+            </div>
+        </div>
+        <div class="card shadow mb-3">
+            <div class="card-header"><strong>urls.py</strong></div>
+            <div class="card-body p-0">
+<pre class="mb-0"><code class="language-python">from django.urls import path
+from myapp import views
+
+urlpatterns = [
+    path('', views.index),
+    path('about', views.about),
+    path('form/', views.form, name='form'),
+    path('contact', views.contact)
+]</code></pre>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

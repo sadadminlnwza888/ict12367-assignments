@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 5 - SQL Queries</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap');
+        body { font-family: 'Kanit', sans-serif; background-color: #f0f4f8; }
+        pre code { font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="../">ICT12367 - Assignments</a>
+        </div>
+    </nav>
+    <div class="container my-4">
+        <h2 class="text-primary text-center mb-2">Assignment 5 - SQL Queries</h2>
+        <p class="text-center text-muted mb-4">68043407 วรพัธน์ ด้วงแก้ว | MySQL World Sample Database</p>
+        <div class="card shadow">
+            <div class="card-body">
+<pre><code class="language-sql">-- Assignment 5 - 68043407 วรพัธน์ ด้วงแก้ว
+-- MySQL World Sample Database (tables: city, country, countrylanguage)
+
+-- ข้อ 1: จงเขียนคำสั่งเพื่อดึงข้อมูลทุกคอลัมน์จากตาราง city
+SELECT * FROM city;
+
+-- ข้อ 2: จงเขียนคำสั่งเพื่อแสดงชื่อเมือง (Name) และเขต (District) ของเมืองทั้งหมด
+SELECT Name, District FROM city;
+
+-- ข้อ 3: จงเขียนคำสั่งเพื่อค้นหาเมืองที่มีรหัสประเทศ (CountryCode) เป็น 'THA'
+SELECT Name FROM city WHERE CountryCode = 'THA';
+
+-- ข้อ 4: จงเขียนคำสั่งเพื่อค้นหาเมืองที่มีประชากร (Population) มากกว่า 1,000,000 คน
+SELECT * FROM city WHERE Population > 1000000;
+
+-- ข้อ 5: จงเขียนคำสั่งเพื่อค้นหาเมืองที่มีรหัสประเทศ 'BEL' และมีประชากรมากกว่า 2,000,000 คน
+SELECT * FROM city WHERE CountryCode = 'BEL' AND Population > 2000000;
+
+-- ข้อ 6: จงเขียนคำสั่งเพื่อแสดงชื่อประเทศ (Name) และทวีป (Continent) ของประเทศทั้งหมด
+SELECT Name, Continent FROM country;
+
+-- ข้อ 7: จงเขียนคำสั่งเพื่อค้นหาประเทศที่อยู่ในทวีปเอเชีย (Asia)
+SELECT * FROM country WHERE Continent = 'Asia';
+
+-- ข้อ 8: จงเขียนคำสั่งเพื่อค้นหาประเทศในภูมิภาคเอเชียตะวันออกเฉียงใต้ที่มีประชากรมากกว่า 50 ล้านคน
+SELECT Name FROM country WHERE Region = 'Southeast Asia' AND Population > 50000000;
+
+-- ข้อ 9: จงเขียนคำสั่งเพื่อค้นหาประเทศที่มีอายุขัยเฉลี่ย (LifeExpectancy) มากกว่า 80 ปี
+SELECT Name FROM country WHERE LifeExpectancy > 80;
+
+-- ข้อ 10: จงเขียนคำสั่งเพื่อค้นหาประเทศที่ไม่มีข้อมูลปีที่ได้รับเอกราช (IndepYear IS NULL)
+SELECT Name FROM country WHERE IndepYear IS NULL;
+
+-- ข้อ 11: จงเขียนคำสั่งเพื่อค้นหาประเทศที่มี GNP มากกว่า GNPOld
+SELECT Name FROM country WHERE GNP > GNPOld;
+
+-- ข้อ 12: จงเขียนคำสั่งเพื่อแสดงภาษาทั้งหมดที่ใช้ในประเทศที่มีรหัส 'USA'
+SELECT Language FROM countrylanguage WHERE CountryCode = 'USA';
+
+-- ข้อ 13: จงเขียนคำสั่งเพื่อค้นหาภาษาที่เป็นภาษาราชการ (IsOfficial = 'T')
+SELECT * FROM countrylanguage WHERE IsOfficial = 'T';
+
+-- ข้อ 14: จงเขียนคำสั่งเพื่อค้นหาภาษาที่มีเปอร์เซ็นต์การใช้งาน (Percentage) มากกว่า 50%
+SELECT * FROM countrylanguage WHERE Percentage > 50;
+
+-- ข้อ 15: จงเขียนคำสั่งเพื่อค้นหาภาษาที่ไม่ใช่ภาษาราชการ และมีเปอร์เซ็นต์การใช้งานมากกว่า 30%
+SELECT * FROM countrylanguage WHERE IsOfficial = 'F' AND Percentage > 30;</code></pre>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

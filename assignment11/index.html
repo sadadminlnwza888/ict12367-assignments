@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 11 - Django CRUD (Styled)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap');
+        body { font-family: 'Kanit', sans-serif; }
+        .hero-section { background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://picsum.photos/1200/400?random=hero'); background-size: cover; background-position: center; color: white; padding: 100px 0; text-align: center; }
+        .hero-section h1 { font-size: 2rem; font-weight: 600; }
+        footer { background-color: #343a40; color: white; text-align: center; padding: 15px 0; margin-top: 30px; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="../">ICT12367 SPU</a>
+            <div class="collapse navbar-collapse justify-content-end"><ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link active" href="index.html">หน้าแรก</a></li>
+                <li class="nav-item"><a class="nav-link" href="../assignment10/form.html">ลงทะเบียน</a></li>
+                <li class="nav-item"><a class="nav-link" href="../assignment10/about.html">เกี่ยวกับเรา</a></li>
+            </ul></div>
+        </div>
+    </nav>
+    <div class="hero-section"><h1>ยินดีต้อนรับสู่เว็บไซต์ของรายวิชา ICT12367</h1></div>
+
+    <div class="container my-4">
+        <h2 style="color: blueviolet;" class="text-center">ยินดีต้อนรับเข้าสู่ประชากร</h2>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>รหัสประชากร</th>
+                    <th>ชื่อประชากร</th>
+                    <th>อายุ</th>
+                    <th>วันที่เพิ่มข้อมูล</th>
+                    <th class="text-center">แก้ไข</th>
+                    <th class="text-center">ลบ</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>1</th><td>วรพัธน์ ด้วงแก้ว</td><td>22</td><td>March 05, 2025</td>
+                    <td class="text-center"><a href="#" class="btn btn-warning text-white" onclick="alert('Demo only')">แก้ไข</a></td>
+                    <td class="text-center"><a href="#" class="btn btn-danger text-white" onclick="alert('Demo only')">ลบ</a></td>
+                </tr>
+                <tr>
+                    <th>2</th><td>สมชาย ใจดี</td><td>30</td><td>March 05, 2025</td>
+                    <td class="text-center"><a href="#" class="btn btn-warning text-white" onclick="alert('Demo only')">แก้ไข</a></td>
+                    <td class="text-center"><a href="#" class="btn btn-danger text-white" onclick="alert('Demo only')">ลบ</a></td>
+                </tr>
+                <tr>
+                    <th>3</th><td>สมหญิง รักเรียน</td><td>25</td><td>March 05, 2025</td>
+                    <td class="text-center"><a href="#" class="btn btn-warning text-white" onclick="alert('Demo only')">แก้ไข</a></td>
+                    <td class="text-center"><a href="#" class="btn btn-danger text-white" onclick="alert('Demo only')">ลบ</a></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <hr class="my-5">
+        <h4 class="text-secondary mb-3">Source Code (Assignment 11 - ปรับปรุง UI)</h4>
+        <p class="text-muted">ความแตกต่างจาก Assignment 10: เปลี่ยนปุ่มแก้ไขเป็น <code>btn-warning</code> และปุ่มลบเป็น <code>btn-danger</code> (Bootstrap standard classes)</p>
+
+        <div class="card shadow mb-3">
+            <div class="card-header"><strong>models.py</strong></div>
+            <div class="card-body p-0">
+<pre class="mb-0"><code class="language-python">from django.db import models
+
+class Person(models.Model):
+    name = models.CharField(max_length=100)
+    age = models.IntegerField()
+    created_at = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name</code></pre>
+            </div>
+        </div>
+
+        <div class="card shadow mb-3">
+            <div class="card-header"><strong>views.py</strong></div>
+            <div class="card-body p-0">
+<pre class="mb-0"><code class="language-python">from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse
+from myapp.models import Person
+
+def index(request):
+    all_person = Person.objects.all()
+    return render(request, 'index.html', {'all_person': all_person})
+
+def about(request):
+    return render(request, 'about.html')
+
+def form(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        age = request.POST.get('age')
+        if name and age:
+            Person.objects.create(name=name, age=int(age))
+            return redirect('/')
+    return render(request, 'form.html')
+
+def edit(request, id):
+    person = get_object_or_404(Person, id=id)
+    if request.method == 'POST':
+        person.name = request.POST.get('name')
+        person.age = request.POST.get('age')
+        person.save()
+        return redirect('/')
+    return render(request, 'edit.html', {'person': person})
+
+def delete(request, id):
+    person = get_object_or_404(Person, id=id)
+    person.delete()
+    return redirect('/')</code></pre>
+            </div>
+        </div>
+    </div>
+
+    <footer><p class="mb-0">&copy; 2025 ICT12367 SPU | 68043407 วรพัธน์ ด้วงแก้ว</p></footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>
