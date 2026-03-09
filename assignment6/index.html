@@ -1,66 +1,839 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assignment 6 - Python Basics</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap');
-        body { font-family: 'Kanit', sans-serif; background-color: #f0f4f8; }
-        pre code { font-size: 0.9rem; }
-    </style>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ICT22567 — 68043407 วรพัธน์ ด้วงแก้ว — NASA Space Innovation</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+
+  <!-- CSS Frameworks -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+
+  <style>
+    :root {
+      /* NASA Space Palette */
+      --primary: #e23636;
+      --primary-light: #fc5c65;
+      --primary-dark: #0b1026;
+      --accent: #4fc3f7;
+      --nasa-blue: #0b3d91;
+      --nasa-red: #fc3d21;
+      --bg-light: #0d1117;
+      --white: #ffffff;
+      --text-main: #e6edf3;
+      --text-muted: #8b949e;
+      --glass-bg: rgba(13, 17, 23, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --shadow-soft: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+      --shadow-hover: 0 15px 45px 0 rgba(226, 54, 54, 0.25);
+    }
+
+    * { box-sizing: border-box; cursor: none; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Prompt', sans-serif;
+      background-color: var(--bg-light);
+      color: var(--text-main);
+      overflow-x: hidden;
+    }
+
+    /* ── SCROLLBAR & PROGRESS ── */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #161b22; }
+    ::-webkit-scrollbar-thumb { background: var(--nasa-blue); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+    #scroll-progress {
+      position: fixed; top: 0; left: 0;
+      height: 4px; background: linear-gradient(90deg, var(--nasa-red), var(--accent));
+      width: 0%; z-index: 1050; transition: width 0.1s;
+    }
+
+    /* ── CUSTOM CURSOR ── */
+    .cursor-dot, .cursor-outline {
+      position: fixed; top: 0; left: 0;
+      transform: translate(-50%, -50%);
+      border-radius: 50%; z-index: 9999;
+      pointer-events: none;
+    }
+    .cursor-dot {
+      width: 8px; height: 8px; background-color: var(--nasa-red);
+    }
+    .cursor-outline {
+      width: 40px; height: 40px;
+      border: 2px solid var(--accent);
+      transition: width 0.2s, height 0.2s, background-color 0.2s;
+    }
+
+    /* ── PRELOADER ── */
+    #preloader {
+      position: fixed; inset: 0;
+      background: var(--primary-dark);
+      z-index: 99999; display: flex;
+      justify-content: center; align-items: center;
+      transition: opacity 0.6s ease;
+    }
+    .loader {
+      width: 50px; height: 50px;
+      border: 5px solid rgba(79, 195, 247, 0.3);
+      border-top-color: var(--nasa-red);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+
+    /* ── STARS BACKGROUND ── */
+    .stars-bg {
+      position: fixed; inset: 0; z-index: -1;
+      background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+    }
+    .stars-bg::before, .stars-bg::after {
+      content: ''; position: absolute; inset: 0;
+    }
+    .stars-bg::before {
+      background-image:
+        radial-gradient(2px 2px at 20px 30px, #eee, transparent),
+        radial-gradient(2px 2px at 40px 70px, #fff, transparent),
+        radial-gradient(1px 1px at 90px 40px, #ddd, transparent),
+        radial-gradient(1px 1px at 130px 80px, #fff, transparent),
+        radial-gradient(2px 2px at 160px 30px, #eee, transparent),
+        radial-gradient(1px 1px at 200px 50px, #fff, transparent),
+        radial-gradient(1px 1px at 250px 20px, #ddd, transparent),
+        radial-gradient(2px 2px at 300px 60px, #eee, transparent);
+      background-size: 350px 100px;
+      animation: twinkle 5s ease-in-out infinite alternate;
+    }
+    @keyframes twinkle {
+      0% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+
+    /* ── NAVBAR (GLASSMORPHISM) ── */
+    .navbar {
+      background: rgba(11, 16, 38, 0.3);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 18px 0; transition: all 0.4s ease;
+    }
+    .navbar.scrolled {
+      background: rgba(11, 16, 38, 0.95);
+      padding: 12px 0; box-shadow: 0 4px 30px rgba(0,0,0,0.5);
+    }
+    .navbar-brand {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.6rem; font-weight: 900;
+      color: var(--white) !important;
+      transition: color 0.4s; letter-spacing: 2px;
+    }
+    .navbar.scrolled .navbar-brand { color: var(--accent) !important; }
+
+    .nav-link {
+      color: rgba(255,255,255,0.9) !important;
+      font-weight: 500; margin: 0 10px;
+      position: relative; transition: all 0.3s;
+    }
+    .navbar.scrolled .nav-link { color: rgba(255,255,255,0.8) !important; }
+    .nav-link::after {
+      content: ''; position: absolute;
+      bottom: -4px; left: 0; width: 0%; height: 2px;
+      background: var(--nasa-red);
+      transition: width 0.3s ease;
+    }
+    .nav-link:hover::after { width: 100%; }
+
+    .btn-contact {
+      background: linear-gradient(135deg, var(--nasa-red), var(--primary-light));
+      color: var(--white) !important;
+      border-radius: 30px; padding: 8px 24px !important;
+      font-weight: 600; border: none;
+      box-shadow: 0 4px 15px rgba(252, 61, 33, 0.3);
+      transition: all 0.3s;
+    }
+    .btn-contact:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(252, 61, 33, 0.5);
+    }
+
+    /* ── HERO BANNER ── */
+    .hero {
+      position: relative; height: 100vh; min-height: 700px;
+      display: flex; align-items: center; justify-content: center;
+      background: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2000') center/cover no-repeat;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(45deg, rgba(11,16,38,0.92) 0%, rgba(11,61,145,0.5) 100%);
+    }
+    /* Floating Particles - Stars */
+    .particle {
+      position: absolute; border-radius: 50%;
+      background: rgba(255, 255, 255, 0.6);
+      animation: floatUp 15s infinite linear;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(100vh) scale(0); opacity: 0; }
+      20% { opacity: 1; }
+      100% { transform: translateY(-100px) scale(1.5); opacity: 0; }
+    }
+
+    .hero-content {
+      position: relative; z-index: 2; text-align: center; color: var(--white);
+    }
+    .badge-hero {
+      background: rgba(252, 61, 33, 0.15);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(252, 61, 33, 0.4);
+      padding: 8px 20px; border-radius: 50px;
+      font-size: 0.9rem; font-weight: 500; letter-spacing: 3px;
+      margin-bottom: 30px; display: inline-block;
+      animation: fadeInDown 1s ease;
+      font-family: 'Orbitron', sans-serif;
+    }
+    .hero-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 900;
+      line-height: 1.2; margin-bottom: 20px;
+      text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      animation: fadeInUp 1s ease 0.2s both;
+      letter-spacing: 1px;
+    }
+    .text-gradient {
+      background: linear-gradient(to right, var(--accent), #81d4fa);
+      background-clip: text;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero-subtitle {
+      font-size: 1.2rem; font-weight: 300; opacity: 0.85;
+      margin-bottom: 40px; max-width: 650px; margin-inline: auto;
+      animation: fadeInUp 1s ease 0.4s both;
+    }
+    .hero-btn {
+      background: var(--nasa-red); color: var(--white);
+      padding: 16px 45px; border-radius: 50px;
+      font-weight: 700; font-size: 1.1rem; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 10px;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      animation: fadeInUp 1s ease 0.6s both;
+      font-family: 'Orbitron', sans-serif; letter-spacing: 1px;
+    }
+    .hero-btn:hover {
+      background: var(--accent); color: var(--primary-dark);
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 15px 30px rgba(79, 195, 247, 0.4);
+    }
+
+    /* Wave Shape Divider */
+    .custom-shape-divider-bottom {
+      position: absolute; bottom: -1px; left: 0; width: 100%;
+      overflow: hidden; line-height: 0; transform: rotate(180deg);
+    }
+    .custom-shape-divider-bottom svg {
+      position: relative; display: block; width: calc(100% + 1.3px); height: 120px;
+    }
+    .custom-shape-divider-bottom .shape-fill { fill: var(--bg-light); }
+
+    /* ── SECTION STYLES ── */
+    .section-padding { padding: 120px 0; }
+    .section-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.5rem; font-weight: 800; color: var(--white);
+      margin-bottom: 15px; position: relative;
+    }
+    .title-wrapper { text-align: center; margin-bottom: 70px; }
+    .text-ocean { color: var(--nasa-red); font-family: 'Orbitron', sans-serif; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; font-size: 0.85rem; }
+
+    /* ── SERVICES (3D GLASS CARDS) ── */
+    .service-card {
+      background: linear-gradient(145deg, #161b22, #1c2333);
+      border-radius: 24px; padding: 40px 30px;
+      text-align: center; height: 100%;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(255,255,255,0.06);
+      transition: transform 0.5s ease, box-shadow 0.5s ease;
+      position: relative; overflow: hidden;
+      transform-style: preserve-3d;
+      transform: perspective(1000px);
+    }
+    .service-card::before {
+      content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px;
+      background: linear-gradient(90deg, var(--nasa-red), var(--accent));
+      transform: scaleX(0); transition: transform 0.4s ease; transform-origin: left;
+    }
+    .service-card:hover {
+      transform: perspective(1000px) translateY(-15px) rotateX(5deg);
+      box-shadow: var(--shadow-hover);
+    }
+    .service-card:hover::before { transform: scaleX(1); }
+
+    .icon-box {
+      width: 80px; height: 80px; margin: 0 auto 25px;
+      background: linear-gradient(135deg, rgba(11,61,145,0.3), rgba(79,195,247,0.15));
+      border-radius: 20px; display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; color: var(--accent);
+      transform: translateZ(30px);
+      transition: all 0.4s;
+    }
+    .service-card:hover .icon-box { background: var(--nasa-red); color: var(--white); transform: translateZ(40px) scale(1.1); }
+    .service-card h4 { font-weight: 700; color: var(--white); margin-bottom: 15px; transform: translateZ(20px); }
+    .service-card p { color: var(--text-muted); font-size: 0.95rem; transform: translateZ(10px); }
+
+    /* ── ABOUT / INNOVATION ── */
+    .bg-white { background: #0d1117 !important; }
+    .img-showcase {
+      border-radius: 30px; overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+      position: relative;
+    }
+    .img-showcase img { width: 100%; transition: transform 0.7s; }
+    .img-showcase:hover img { transform: scale(1.05); }
+    .floating-card {
+      position: absolute; bottom: -30px; right: -30px;
+      background: rgba(22, 27, 34, 0.95); backdrop-filter: blur(10px);
+      padding: 25px; border-radius: 20px; box-shadow: var(--shadow-hover);
+      max-width: 250px; animation: float 4s ease-in-out infinite;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+    .feature-list li {
+      display: flex; align-items: center; gap: 15px;
+      margin-bottom: 20px; font-size: 1.1rem; color: var(--text-main); font-weight: 500;
+    }
+    .feature-list i {
+      background: var(--nasa-red); color: var(--white);
+      width: 35px; height: 35px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ── STATS (ANIMATED COUNTER) ── */
+    .stats-section {
+      background: linear-gradient(135deg, #0b1026, var(--nasa-blue));
+      padding: 80px 0; color: var(--white); position: relative;
+      border-top: 1px solid rgba(79,195,247,0.1);
+      border-bottom: 1px solid rgba(79,195,247,0.1);
+    }
+    .stat-box { text-align: center; padding: 20px; }
+    .counter {
+      font-family: 'Orbitron', sans-serif; font-size: 3.5rem;
+      font-weight: 900; margin-bottom: 5px;
+      background: linear-gradient(to right, #fff, var(--accent));
+      background-clip: text;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .stat-text { font-size: 0.85rem; font-weight: 500; letter-spacing: 2px; color: var(--accent); font-family: 'Orbitron', sans-serif; }
+
+    /* ── TESTIMONIALS ── */
+    .testimonial-card {
+      background: linear-gradient(145deg, #161b22, #1c2333); border-radius: 20px;
+      padding: 40px 30px; box-shadow: var(--shadow-soft);
+      position: relative; margin: 15px; border-top: 4px solid var(--nasa-red);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-top: 4px solid var(--nasa-red);
+    }
+    .quote-icon {
+      position: absolute; top: 20px; right: 20px;
+      font-size: 3rem; color: rgba(252, 61, 33, 0.15);
+    }
+    .client-info { display: flex; align-items: center; gap: 15px; margin-top: 25px; }
+    .client-img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); }
+    .client-name { font-weight: 700; color: var(--white); margin: 0; }
+    .client-role { font-size: 0.85rem; color: var(--text-muted); }
+    .stars i { color: #ffd700; font-size: 0.9rem; }
+
+    /* ── CALL TO ACTION ── */
+    .cta-section {
+      padding: 100px 0; text-align: center;
+      background: url('https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?q=80&w=2000') center/cover fixed;
+      position: relative; color: var(--white);
+    }
+    .cta-section::before {
+      content: ''; position: absolute; inset: 0;
+      background: rgba(11, 16, 38, 0.88);
+    }
+    .cta-content { position: relative; z-index: 2; }
+    .btn-glow {
+      background: var(--nasa-red); color: var(--white);
+      padding: 15px 40px; border-radius: 50px; font-weight: 700; font-size: 1.1rem;
+      border: none; box-shadow: 0 0 20px rgba(252, 61, 33, 0.5);
+      transition: all 0.3s; font-family: 'Orbitron', sans-serif; letter-spacing: 1px;
+    }
+    .btn-glow:hover {
+      background: var(--accent); color: var(--primary-dark);
+      box-shadow: 0 0 40px rgba(79, 195, 247, 0.6); transform: scale(1.05);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #010409; color: rgba(255,255,255,0.7);
+      padding: 80px 0 20px; position: relative;
+    }
+    .footer-brand {
+      font-family: 'Orbitron', sans-serif; font-size: 1.8rem;
+      color: var(--white); font-weight: 700; margin-bottom: 20px;
+      letter-spacing: 2px;
+    }
+    .social-icons a {
+      width: 45px; height: 45px; display: inline-flex; align-items: center; justify-content: center;
+      border-radius: 50%; background: rgba(255,255,255,0.05); color: var(--white);
+      margin-right: 10px; transition: all 0.3s; border: 1px solid rgba(255,255,255,0.1);
+    }
+    .social-icons a:hover {
+      background: var(--nasa-red); border-color: var(--nasa-red);
+      transform: translateY(-5px); box-shadow: 0 5px 15px rgba(252, 61, 33, 0.4);
+    }
+    .footer-links h5 { color: var(--white); font-weight: 600; margin-bottom: 25px; }
+    .footer-links ul { list-style: none; padding: 0; }
+    .footer-links li { margin-bottom: 15px; }
+    .footer-links a {
+      color: rgba(255,255,255,0.5); text-decoration: none; transition: 0.3s;
+    }
+    .footer-links a:hover { color: var(--accent); padding-left: 8px; }
+
+    /* ── REVEAL ANIMATIONS ── */
+    .reveal { opacity: 0; transform: translateY(50px); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
+    .reveal.active { opacity: 1; transform: translateY(0); }
+
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeInDown { from { opacity: 0; transform: translateY(-40px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* NASA Logo Glow */
+    .nasa-glow { text-shadow: 0 0 10px rgba(79, 195, 247, 0.5), 0 0 20px rgba(79, 195, 247, 0.2); }
+
+    /* Orbit Ring Animation */
+    .orbit-ring {
+      position: absolute; border: 1px solid rgba(79, 195, 247, 0.1);
+      border-radius: 50%; animation: orbit-spin 30s linear infinite;
+    }
+    @keyframes orbit-spin { 100% { transform: rotate(360deg); } }
+  </style>
 </head>
 <body>
-    <nav class="navbar navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="../">ICT12367 - Assignments</a>
-        </div>
-    </nav>
-    <div class="container my-4">
-        <h2 class="text-primary text-center mb-2">Assignment 6 - Python Basics & Django Install</h2>
-        <p class="text-center text-muted mb-4">68043407 วรพัธน์ ด้วงแก้ว</p>
-        <div class="card shadow">
-            <div class="card-body">
-<pre><code class="language-python"># =============================================================
-# Assignment 6 - 68043407 วรพัธน์ ด้วงแก้ว
-# วิชา: ICT12367
-# =============================================================
 
-# ----- ส่วนที่ 1: ติดตั้ง Django และแสดง pip list -----
-#   1. pip install django
-#   2. pip list
+  <!-- Stars Background -->
+  <div class="stars-bg"></div>
 
-# =============================================================
-# ส่วนที่ 2: ทดสอบคำสั่ง Python
-# =============================================================
+  <!-- Preloader -->
+  <div id="preloader"><div class="loader"></div></div>
 
-print("=" * 55)
-print("  Assignment 6 - 68043407 วรพัธน์ ด้วงแก้ว")
-print("=" * 55)
-print()
+  <!-- Scroll Progress -->
+  <div id="scroll-progress"></div>
 
-# ----- ทดสอบที่ 1: การพิมพ์ตัวเลขและข้อความรวมกัน -----
-print("--- ทดสอบที่ 1: พิมพ์ตัวเลขและข้อความรวมกัน ---")
-age = 25
-print("อายุของฉันคือ", age)
-print()
+  <!-- Custom Cursor -->
+  <div class="cursor-dot" data-cursor-dot></div>
+  <div class="cursor-outline" data-cursor-outline></div>
 
-# ----- ทดสอบที่ 2: การใช้ f-string -----
-print("--- ทดสอบที่ 2: การใช้ f-string ---")
-name = "วรพัธน์"
-age = 22
-print(f"สวัสดี {name}, อายุ {age} ปี")
-print()
-
-# ----- ทดสอบที่ 3: การใช้ sep กำหนดตัวคั่น -----
-print("--- ทดสอบที่ 3: การใช้ sep กำหนดตัวคั่น ---")
-print("Python", "Java", "C++", sep=" | ")</code></pre>
-            </div>
-        </div>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg fixed-top" id="navbar">
+    <div class="container">
+      <a class="navbar-brand nasa-glow" href="#"><i class="fas fa-rocket me-2" style="color: var(--nasa-red);"></i>ICT22567</a>
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
+        <i class="fas fa-bars text-white" id="navIcon"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navMain">
+        <ul class="navbar-nav ms-auto align-items-center">
+          <li class="nav-item"><a class="nav-link" href="#home">หน้าแรก</a></li>
+          <li class="nav-item"><a class="nav-link" href="#services">ภารกิจของเรา</a></li>
+          <li class="nav-item"><a class="nav-link" href="#about">เกี่ยวกับเรา</a></li>
+          <li class="nav-item"><a class="nav-link" href="#testimonials">รีวิว</a></li>
+          <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
+            <button class="btn btn-contact" data-bs-toggle="modal" data-bs-target="#contactModal">
+              ติดต่อเรา <i class="fas fa-satellite ms-1"></i>
+            </button>
+          </li>
+        </ul>
+      </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <script>hljs.highlightAll();</script>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero" id="home">
+    <!-- Particles (Stars) -->
+    <div class="particle" style="width:4px; height:4px; left:10%; animation-duration: 12s;"></div>
+    <div class="particle" style="width:6px; height:6px; left:30%; animation-duration: 18s; animation-delay: 2s;"></div>
+    <div class="particle" style="width:3px; height:3px; left:50%; animation-duration: 14s; animation-delay: 4s;"></div>
+    <div class="particle" style="width:5px; height:5px; left:70%; animation-duration: 10s; animation-delay: 5s;"></div>
+    <div class="particle" style="width:4px; height:4px; left:85%; animation-duration: 20s;"></div>
+    <div class="particle" style="width:3px; height:3px; left:95%; animation-duration: 16s; animation-delay: 3s;"></div>
+
+    <!-- Orbit Rings -->
+    <div class="orbit-ring" style="width: 600px; height: 600px; top: 50%; left: 50%; margin-top: -300px; margin-left: -300px;"></div>
+    <div class="orbit-ring" style="width: 800px; height: 800px; top: 50%; left: 50%; margin-top: -400px; margin-left: -400px; animation-duration: 45s; animation-direction: reverse;"></div>
+
+    <div class="container hero-content">
+      <div class="badge-hero"><i class="fas fa-star text-warning me-2"></i>SPACE EXPLORATION</div>
+      <h1 class="hero-title">นวัตกรรมแห่งอวกาศ<br><span class="text-gradient">Beyond The Stars</span></h1>
+      <p class="hero-subtitle">สำรวจขอบเขตใหม่ของเทคโนโลยีอวกาศ ผสมผสานวิทยาศาสตร์ขั้นสูงกับจินตนาการที่ไร้ขีดจำกัด เพื่อก้าวข้ามทุกขอบฟ้า</p>
+      <a href="#services" class="hero-btn">
+        เริ่มภารกิจ <i class="fas fa-rocket fs-5"></i>
+      </a>
+    </div>
+
+    <!-- SVG Bottom Wave -->
+    <div class="custom-shape-divider-bottom">
+      <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+        <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
+      </svg>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <section class="section-padding" id="services">
+    <div class="container">
+      <div class="title-wrapper reveal">
+        <div class="text-ocean">Our Missions</div>
+        <h2 class="section-title">ภารกิจสำรวจอวกาศ</h2>
+        <p class="mx-auto" style="max-width: 600px; color: #8b949e;">ก้าวไปกับเทคโนโลยีอวกาศล้ำสมัย ออกแบบโดยผู้เชี่ยวชาญระดับแนวหน้าจาก NASA และองค์กรอวกาศชั้นนำของโลก</p>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-lg-4 col-md-6 reveal" style="transition-delay: 0.1s;">
+          <div class="service-card">
+            <div class="icon-box"><i class="fas fa-satellite"></i></div>
+            <h4>Satellite Systems</h4>
+            <p>ระบบดาวเทียมสำรวจโลกและอวกาศลึก พร้อมเทคโนโลยีส่งข้อมูลความเร็วสูงผ่านเลเซอร์คอมมิวนิเคชัน</p>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 reveal" style="transition-delay: 0.2s;">
+          <div class="service-card">
+            <div class="icon-box"><i class="fas fa-space-shuttle"></i></div>
+            <h4>Space Launch Systems</h4>
+            <p>ระบบปล่อยจรวดนำส่งดาวเทียมและยานอวกาศ ด้วยเทคโนโลยีจรวดเชื้อเพลิงเหลวรุ่นล่าสุด</p>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 reveal" style="transition-delay: 0.3s;">
+          <div class="service-card">
+            <div class="icon-box"><i class="fas fa-robot"></i></div>
+            <h4>Mars Rover AI</h4>
+            <p>หุ่นยนต์สำรวจดาวอังคาร ขับเคลื่อนด้วย AI อัจฉริยะ เก็บตัวอย่างหินและวิเคราะห์ผิวดาวแบบเรียลไทม์</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About / Innovation Section -->
+  <section class="section-padding bg-white" id="about">
+    <div class="container">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-6 reveal">
+          <div class="img-showcase">
+            <img src="https://images.unsplash.com/photo-1446776877081-d282a0f896e2?q=80&w=1000" alt="NASA Control Room">
+            <div class="floating-card d-none d-md-block">
+              <div class="d-flex align-items-center gap-3">
+                <i class="fas fa-check-circle fs-1" style="color: var(--accent);"></i>
+                <div>
+                  <h6 class="mb-0 fw-bold" style="color: var(--white);">ภารกิจสำเร็จ #1</h6>
+                  <small class="text-muted">ความน่าเชื่อถือ 99.9%</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6 reveal" style="transition-delay: 0.2s;">
+          <div class="text-ocean">Why Choose Us</div>
+          <h2 class="section-title">เทคโนโลยีอวกาศ<br>เพื่ออนาคตมนุษยชาติ</h2>
+          <p class="mb-4 fs-5" style="color: #9ca3af;">เราเชื่อว่าอนาคตของมนุษยชาติอยู่เหนือชั้นบรรยากาศ ทุกภารกิจคือก้าวสำคัญที่พาเราไปสู่ดวงดาว</p>
+          <ul class="feature-list list-unstyled">
+            <li><i class="fas fa-bolt"></i> ระบบนำทางด้วย AI ความแม่นยำสูง</li>
+            <li><i class="fas fa-shield-alt"></i> โล่ป้องกันรังสีคอสมิกรุ่นล่าสุด</li>
+            <li><i class="fas fa-satellite-dish"></i> ติดตามภารกิจตลอด 24/7 แบบเรียลไทม์</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Counter -->
+  <section class="stats-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3 col-6 stat-box reveal">
+          <div class="counter" data-target="350">0</div>
+          <div class="stat-text">MISSIONS</div>
+        </div>
+        <div class="col-md-3 col-6 stat-box reveal" style="transition-delay: 0.1s;">
+          <div class="counter" data-target="98">0</div>
+          <div class="stat-text">SUCCESS (%)</div>
+        </div>
+        <div class="col-md-3 col-6 stat-box reveal" style="transition-delay: 0.2s;">
+          <div class="counter" data-target="120">0</div>
+          <div class="stat-text">ASTRONAUTS</div>
+        </div>
+        <div class="col-md-3 col-6 stat-box reveal" style="transition-delay: 0.3s;">
+          <div class="counter" data-target="24">0</div>
+          <div class="stat-text">SPACE STATIONS</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="section-padding" id="testimonials">
+    <div class="container">
+      <div class="title-wrapper reveal">
+        <div class="text-ocean">Testimonials</div>
+        <h2 class="section-title">เสียงจากนักบินอวกาศ</h2>
+      </div>
+      <div class="row g-4">
+        <div class="col-lg-4 reveal">
+          <div class="testimonial-card">
+            <i class="fas fa-quote-right quote-icon"></i>
+            <div class="stars mb-3">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            </div>
+            <p style="color: #9ca3af;">"ระบบนำทางของยานรุ่นใหม่แม่นยำเหลือเชื่อ ภารกิจเดินทางไปดวงจันทร์ราบรื่นทุกขั้นตอน เทคโนโลยีสุดล้ำจริงๆ!"</p>
+            <div class="client-info">
+              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150" alt="User" class="client-img">
+              <div>
+                <h5 class="client-name">Dr. อลิสา ใจดี</h5>
+                <span class="client-role">Mission Commander</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 reveal" style="transition-delay: 0.2s;">
+          <div class="testimonial-card">
+            <i class="fas fa-quote-right quote-icon"></i>
+            <div class="stars mb-3">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            </div>
+            <p style="color: #9ca3af;">"ชุดอวกาศรุ่นใหม่ใส่สบายมาก ระบบรักษาอุณหภูมิและแรงดันทำงานได้สมบูรณ์แบบ ปลอดภัยทุกสภาวะ"</p>
+            <div class="client-info">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150" alt="User" class="client-img">
+              <div>
+                <h5 class="client-name">ดร.ธนภัทร วงศ์ษา</h5>
+                <span class="client-role">Flight Engineer</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 reveal" style="transition-delay: 0.4s;">
+          <div class="testimonial-card">
+            <i class="fas fa-quote-right quote-icon"></i>
+            <div class="stars mb-3">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+            </div>
+            <p style="color: #9ca3af;">"สถานีอวกาศมีระบบเครือข่ายเสถียรมาก ทำวิจัยจากวงโคจรได้ลื่นไหลเหมือนอยู่บนโลก ส่งข้อมูลกลับมาได้ทันที"</p>
+            <div class="client-info">
+              <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=150" alt="User" class="client-img">
+              <div>
+                <h5 class="client-name">ดร.เมธาวี สุขสม</h5>
+                <span class="client-role">Space Scientist</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section reveal">
+    <div class="container cta-content">
+      <h2 class="display-5 fw-bold mb-4" style="font-family: 'Orbitron', sans-serif;">พร้อมออกเดินทางสู่ดวงดาวหรือยัง?</h2>
+      <p class="fs-5 mb-5 opacity-75">ร่วมเป็นส่วนหนึ่งของภารกิจสำรวจอวกาศครั้งยิ่งใหญ่ที่จะเปลี่ยนอนาคตมนุษยชาติ</p>
+      <button class="btn btn-glow" data-bs-toggle="modal" data-bs-target="#contactModal">
+        สมัครภารกิจ <i class="fas fa-rocket ms-2"></i>
+      </button>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row g-5">
+        <div class="col-lg-4">
+          <div class="footer-brand"><i class="fas fa-rocket me-2" style="color: var(--nasa-red);"></i>ICT22567</div>
+          <p class="pe-lg-4">ก้าวข้ามขีดจำกัดของมนุษยชาติ ด้วยเทคโนโลยีอวกาศและนวัตกรรมที่ออกแบบเพื่อสำรวจจักรวาล</p>
+          <div class="social-icons mt-4">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+        <div class="col-lg-2 col-6 footer-links">
+          <h5>เมนูหลัก</h5>
+          <ul>
+            <li><a href="#home">หน้าแรก</a></li>
+            <li><a href="#services">ภารกิจทั้งหมด</a></li>
+            <li><a href="#about">เรื่องราวของเรา</a></li>
+            <li><a href="#testimonials">รีวิว</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-2 col-6 footer-links">
+          <h5>ภารกิจ</h5>
+          <ul>
+            <li><a href="#">Satellite Systems</a></li>
+            <li><a href="#">Space Launch</a></li>
+            <li><a href="#">Mars Rover AI</a></li>
+            <li><a href="#">Space Station</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-4 footer-links">
+          <h5>สมัครรับข่าวสาร</h5>
+          <p class="mb-3">รับอัปเดตภารกิจอวกาศและเทคโนโลยีใหม่ๆ ก่อนใคร</p>
+          <div class="input-group mb-3">
+            <input type="email" class="form-control" placeholder="อีเมลของคุณ..." style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color:white;">
+            <button class="btn px-4" type="button" style="background: var(--nasa-red); border:none; color: white;">ติดตาม</button>
+          </div>
+        </div>
+      </div>
+      <div class="text-center mt-5 pt-4 border-top border-secondary">
+        <p class="mb-0 text-white-50">&copy; 2026 ICT22567 NASA Space Theme. Crafted with <i class="fas fa-rocket mx-1" style="color: var(--nasa-red);"></i> Innovation.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Contact Modal -->
+  <div class="modal fade" id="contactModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" style="border-radius: 20px; overflow: hidden; border: none; background: #161b22;">
+        <div class="modal-header text-white" style="background: linear-gradient(135deg, #0b1026, var(--nasa-blue)); padding: 25px;">
+          <h5 class="modal-title fw-bold"><i class="fas fa-rocket me-2"></i>สมัครภารกิจอวกาศ</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4">
+          <form>
+            <div class="form-floating mb-3">
+              <input type="text" class="form-control" id="name" placeholder="ชื่อ-นามสกุล" style="background: #0d1117; border: 1px solid rgba(255,255,255,0.1); color: white;">
+              <label for="name" style="color: var(--text-muted);">ชื่อ-นามสกุล</label>
+            </div>
+            <div class="form-floating mb-3">
+              <input type="email" class="form-control" id="email" placeholder="name@example.com" style="background: #0d1117; border: 1px solid rgba(255,255,255,0.1); color: white;">
+              <label for="email" style="color: var(--text-muted);">อีเมลติดต่อ</label>
+            </div>
+            <div class="form-floating mb-3">
+              <select class="form-select" id="service" style="background: #0d1117; border: 1px solid rgba(255,255,255,0.1); color: white;">
+                <option selected>เลือกภารกิจที่สนใจ</option>
+                <option value="1">Satellite Systems</option>
+                <option value="2">Space Launch Systems</option>
+                <option value="3">Mars Rover AI</option>
+              </select>
+              <label for="service" style="color: var(--text-muted);">ภารกิจ</label>
+            </div>
+            <div class="form-floating mb-3">
+              <textarea class="form-control" placeholder="รายละเอียด" id="message" style="height: 100px; background: #0d1117; border: 1px solid rgba(255,255,255,0.1); color: white;"></textarea>
+              <label for="message" style="color: var(--text-muted);">รายละเอียดเพิ่มเติม</label>
+            </div>
+            <button type="button" class="btn w-100 py-3 text-white fw-bold" style="background: var(--nasa-red); border-radius: 10px;">ส่งใบสมัคร <i class="fas fa-paper-plane ms-2"></i></button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // 1. Preloader Logic
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('preloader').style.opacity = '0';
+        setTimeout(() => { document.getElementById('preloader').style.display = 'none'; }, 600);
+      }, 500);
+    });
+
+    // 2. Custom Cursor
+    const cursorDot = document.querySelector('[data-cursor-dot]');
+    const cursorOutline = document.querySelector('[data-cursor-outline]');
+
+    if (window.matchMedia("(pointer: fine)").matches) {
+      window.addEventListener('mousemove', (e) => {
+        const posX = e.clientX;
+        const posY = e.clientY;
+
+        cursorDot.style.left = `${posX}px`;
+        cursorDot.style.top = `${posY}px`;
+
+        cursorOutline.animate({
+          left: `${posX}px`,
+          top: `${posY}px`
+        }, { duration: 500, fill: "forwards" });
+      });
+
+      document.querySelectorAll('a, button, .service-card').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+          cursorOutline.style.width = '60px';
+          cursorOutline.style.height = '60px';
+          cursorOutline.style.backgroundColor = 'rgba(252, 61, 33, 0.15)';
+        });
+        el.addEventListener('mouseleave', () => {
+          cursorOutline.style.width = '40px';
+          cursorOutline.style.height = '40px';
+          cursorOutline.style.backgroundColor = 'transparent';
+        });
+      });
+    } else {
+      cursorDot.style.display = 'none';
+      cursorOutline.style.display = 'none';
+      document.body.style.cursor = 'auto';
+    }
+
+    // 3. Navbar Scroll Effect & Scroll Progress Bar
+    const navbar = document.getElementById('navbar');
+    const navIcon = document.getElementById('navIcon');
+    const progressBar = document.getElementById('scroll-progress');
+
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      progressBar.style.width = scrolled + "%";
+    });
+
+    // 4. Scroll Reveal Animations
+    const reveals = document.querySelectorAll('.reveal');
+    const revealOptions = { threshold: 0.15, rootMargin: "0px 0px -50px 0px" };
+
+    const revealOnScroll = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+
+          if (entry.target.classList.contains('stat-box')) {
+            const counter = entry.target.querySelector('.counter');
+            if (counter && !counter.classList.contains('counted')) {
+              startCounter(counter);
+              counter.classList.add('counted');
+            }
+          }
+        }
+      });
+    }, revealOptions);
+
+    reveals.forEach(reveal => revealOnScroll.observe(reveal));
+
+    // 5. Number Counter Animation
+    function startCounter(counterElement) {
+      const target = +counterElement.getAttribute('data-target');
+      const duration = 2000;
+      const increment = target / (duration / 16);
+
+      let current = 0;
+      const updateCounter = () => {
+        current += increment;
+        if (current < target) {
+          counterElement.innerText = Math.ceil(current);
+          requestAnimationFrame(updateCounter);
+        } else {
+          counterElement.innerText = target;
+        }
+      };
+      updateCounter();
+    }
+  </script>
 </body>
 </html>
